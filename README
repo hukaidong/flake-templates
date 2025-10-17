@@ -1,0 +1,50 @@
+flake-templates
+===============
+
+A collection of Nix flake templates for building projects with reproducible
+environments.
+
+
+TEMPLATES
+---------
+
+latexmk
+    A template for building LaTeX documents using latexmk and Nix.
+    
+    Features:
+    - Automatically discovers and builds all .tex files in the project
+    - Uses LuaLaTeX with shell-escape support
+    - Outputs compiled PDFs to the Nix store
+    - Includes full TeXLive distribution
+    
+    Usage:
+        nix flake init -t github:hukaidong/flake-templates#latexmk
+        nix build
+    
+    The built PDFs will be available in ./result/
+
+ruby
+    A template for Ruby development with bundler and Nix.
+    
+    Features:
+    - Ruby 3.4 environment
+    - Bundler integration with bundix
+    - Development shell with all dependencies
+    
+    Usage:
+        nix flake init -t github:hukaidong/flake-templates#ruby
+        nix develop
+
+
+REQUIREMENTS
+------------
+
+- Nix package manager with flakes enabled
+- For the latexmk template: .tex files in your project directory
+- For the ruby template: Gemfile with your dependencies
+
+
+LICENSE
+-------
+
+See individual template files for licensing information.
