@@ -12,6 +12,14 @@
         ruby = {
           path = ./ruby;
         };
+
+        R = {
+          path = ./r;
+        };
+
+        empty = {
+          path = ./empty;
+        };
       };
     };
 }
