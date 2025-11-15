@@ -19,11 +19,9 @@
           description = "A simple LaTeX template for writing documents with latexmk";
         };
 
-        # TODO: implement full-featured Beamer template
         latex-beamer = {
-          #path = ./latex-beamer;
-          path = ./latexmk; # temporary placeholder
-          description = "A battery-included LaTeX Beamer template for presentations";
+          path = ./latex-beamer;
+          description = "A battery-included LaTeX Beamer template for presentations with Gotham theme and R plotting support";
         };
 
         ruby = {
