@@ -10,29 +10,78 @@ TEMPLATES
 
 latexmk
     A template for building LaTeX documents using latexmk and Nix.
-    
+
     Features:
     - Automatically discovers and builds all .tex files in the project
     - Uses LuaLaTeX with shell-escape support
     - Outputs compiled PDFs to the Nix store
     - Includes full TeXLive distribution
-    
+
     Usage:
         nix flake init -t github:hukaidong/flake-templates#latexmk
         nix build
-    
+
+    The built PDFs will be available in ./result/
+
+latex-beamer
+    A battery-included LaTeX Beamer template for presentations with Gotham theme
+    and R plotting support.
+
+    Features:
+    - Beamer presentation support with Gotham theme
+    - Includes Fira fonts and Fira-math for professional typography
+    - R environment with tidyverse, ggplot2, dplyr, and gridExtra
+    - Supports \rplotfile macro for embedding R-generated plots
+    - Automatically discovers and builds all .tex files
+    - Built-in checks for successful PDF generation
+
+    Usage:
+        nix flake init -t github:hukaidong/flake-templates#latex-beamer
+        nix build
+
     The built PDFs will be available in ./result/
 
 ruby
     A template for Ruby development with bundler and Nix.
-    
+
     Features:
     - Ruby 3.4 environment
     - Bundler integration with bundix
     - Development shell with all dependencies
-    
+
     Usage:
         nix flake init -t github:hukaidong/flake-templates#ruby
+        nix develop
+
+R
+    A template for R development with common data science packages.
+
+    Features:
+    - R environment with tidyverse, here, testthat, and languageserver
+    - Built-in formatter using styler via treefmt-nix
+    - testthat integration for unit testing
+    - Development shell with all R dependencies
+
+    Usage:
+        nix flake init -t github:hukaidong/flake-templates#R
+        nix develop
+
+    Format code:
+        nix fmt
+
+    Run tests:
+        nix flake check
+
+empty
+    A minimal empty template to start from scratch.
+
+    Features:
+    - Basic flake structure with nixpkgs and flake-utils
+    - Minimal package and devShell configuration
+    - Good starting point for custom projects
+
+    Usage:
+        nix flake init -t github:hukaidong/flake-templates#empty
         nix develop
 
 
@@ -41,8 +90,23 @@ REQUIREMENTS
 
 - Nix package manager with flakes enabled
 - For the latexmk template: .tex files in your project directory
+- For the latex-beamer template: .tex files and optional R scripts in rplot/
 - For the ruby template: Gemfile with your dependencies
+- For the R template: R scripts and optional tests/ directory
 
+
+TESTING
+-------
+
+This repository includes a test suite that validates all templates to ensure
+they build correctly. The tests are integrated with GitHub Actions CI.
+
+Run all checks locally:
+    nix flake check
+
+The test suite currently includes:
+- latexmk template build verification
+- latex-beamer template build and PDF generation checks
 
 LICENSE
 -------
