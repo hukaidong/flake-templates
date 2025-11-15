@@ -59,6 +59,31 @@
           #   vscode  # or your preferred editor
           # ];
         };
+
+        # Check if builds successfully
+        checks.build =
+          pkgs.runCommand "check-latexmk-build"
+            {
+              buildInputs = [ pkgs.file ];
+            }
+            ''
+              # Build using the default package
+              built=${packages.default}
+
+              # Check that at least one PDF was generated
+              pdf_count=$(find $built -name "*.pdf" | wc -l)
+              if [ "$pdf_count" -eq 0 ]; then
+                echo "ERROR: No PDF files were generated!"
+                echo "Contents of build output:"
+                ls -la $built/
+                exit 1
+              fi
+
+              echo "SUCCESS: All PDFs built and validated successfully!"
+              echo "Generated $pdf_count PDF file(s)"
+
+              touch $out
+            '';
       }
     );
 }
