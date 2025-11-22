@@ -5,18 +5,85 @@
 
 % Gotham theme configuration
 \gothamset{
-	numbering=framenumber,          % Show frame numbers
-	parttocframe default=off,       % Disable part TOC frames
-	sectiontocframe default=off,    % Disable section TOC frames
-	subsectiontocframe default=off, % Disable subsection TOC frames
+  numbering=framenumber,          % Show frame numbers
+  parttocframe default=off,       % Disable part TOC frames
+  sectiontocframe default=off,    % Disable section TOC frames
+  subsectiontocframe default=off, % Disable subsection TOC frames
 }
+
+\setbeameroption{show notes on second screen=bottom} % Notes on second screen (bottom)
+
+% ===================================================================
+% Custom Note System - Oral vs Scratch Notes
+% ===================================================================
+% Allows toggling between different note types for different scenarios:
+% - Oral notes: For presentation delivery and speaking script
+% - Scratch notes: For TODO items, reminders, and development notes
+%
+% Usage:
+%   \useoralnotes      % Show only oral notes (default)
+%   \usescratchnotes   % Show only scratch notes
+%   \useallnotes       % Show both oral and scratch notes
+%   \usenotes          % Hide all notes
+%
+% In document:
+%   \oralnote{Today I'm presenting...}
+%   \scratchnote{TODO: Update this data}
+% ===================================================================
+
+\makeatletter
+% Define conditionals for note types
+\newif\if@showowralnotes\@showowralnotestrue    % Default: show oral notes
+\newif\if@showscratchnotes\@showscratchnotesfalse % Default: hide scratch notes
+
+% Toggle commands
+\newcommand{\useoralnotes}{%
+  \@showowralnotestrue%
+  \@showscratchnotesfalse%
+  \setbeameroption{show notes}%
+}
+
+\newcommand{\usescratchnotes}{%
+  \@showowralnotesfalse%
+  \@showscratchnotestrue%
+  \setbeameroption{show notes}%
+}
+
+\newcommand{\useallnotes}{%
+  \@showowralnotestrue%
+  \@showscratchnotestrue%
+  \setbeameroption{show notes}%
+}
+
+\newcommand{\usenotes}{%
+  \@showowralnotesfalse%
+  \@showscratchnotesfalse%
+  \setbeameroption{hide notes}%
+}
+
+% Define note commands
+\newcommand{\oralnote}[1]{%
+  \if@showowralnotes%
+    \note{\textbf{[ORAL SCRIPT]}\\[0.5em]#1}%
+  \fi%
+}
+
+\newcommand{\scratchnote}[1]{%
+  \if@showscratchnotes%
+    \note{\textbf{[SCRATCH NOTES]}\\[0.5em]#1}%
+  \fi%
+}
+\makeatother
+
+% Enable notes for oral presentation script (default: oral notes only)
+\useoralnotes
 
 % Essential packages
 \usepackage{standalone}
 \usepackage{tikz}
 \usepackage{pgfplots}
 \usepackage{tabularray}
-	\UseTblrLibrary{booktabs}
+  \UseTblrLibrary{booktabs}
 \usepackage{changepage}
 \usepackage{appendixnumberbeamer}
 \usepackage{amsmath}
@@ -83,139 +150,202 @@
 % ===================================================================
 
 \begin{frame}{Welcome to the Gotham Beamer Template}
-	\framesubtitle{A battery-included template with R plotting support}
-	
-	This template provides:
-	
-	\begin{itemize}
-		\item Modern Gotham theme with clean aesthetics
-		\item Automatic R plot generation with \texttt{\textbackslash rplotfile} macro
-		\item Pre-configured packages for math, tables, and graphics
-		\item Nix flake for reproducible builds
-		\item Support for 16:9 aspect ratio presentations
-	\end{itemize}
-	
-	\vspace{1em}
-	
-	\textbf{Getting started:}
-	\begin{enumerate}
-		\item Edit this \texttt{presentation.tex} file
-		\item Add R scripts to the \texttt{rplot/} directory
-		\item Build with \texttt{nix build}
-	\end{enumerate}
+  \framesubtitle{A battery-included template with R plotting support}
+
+  This template provides:
+
+  \begin{itemize}
+    \item Modern Gotham theme with clean aesthetics
+    \item Automatic R plot generation with \texttt{\textbackslash rplotfile} macro
+    \item Custom note system for oral scripts and scratch notes
+    \item Pre-configured packages for math, tables, and graphics
+    \item Nix flake for reproducible builds
+    \item Support for 16:9 aspect ratio presentations
+  \end{itemize}
+
+  \vspace{1em}
+
+  \textbf{Getting started:}
+  \begin{enumerate}
+    \item Edit this \texttt{presentation.tex} file
+    \item Add R scripts to the \texttt{rplot/} directory
+    \item Build with \texttt{nix build}
+  \end{enumerate}
 \end{frame}
+
+\oralnote{
+  Welcome everyone to this presentation. This template is designed to make creating professional presentations easier by providing batteries-included functionality like automatic R plotting and a custom note system.
+
+  The note system allows you to keep oral scripts and scratch notes separate, which is really helpful during presentation development and delivery.
+}
+
+\scratchnote{
+  TODO: Update the institution name in the metadata before presenting.
+  Remember to test all R plots before the final build.
+}
+
+\begin{frame}{Custom Note-Writing System}
+  \framesubtitle{Separate oral scripts from scratch notes}
+
+  \textbf{Two types of notes:}
+
+  \begin{itemize}
+    \item \textbf{Oral notes:} Your presentation speaking script
+    \item \textbf{Scratch notes:} TODOs, reminders, development notes
+  \end{itemize}
+
+  \vspace{1em}
+
+  \textbf{Toggle between note modes:}
+
+  \begin{tblr}{
+      colspec = {l X},
+      row{1} = {font=\bfseries},
+    }
+    \toprule
+    Command                                 & Effect                         \\
+    \midrule
+    \texttt{\textbackslash useoralnotes}    & Show only oral notes (default) \\
+    \texttt{\textbackslash usescratchnotes} & Show only scratch notes        \\
+    \texttt{\textbackslash useallnotes}     & Show both types                \\
+    \texttt{\textbackslash usenotes}        & Hide all notes                 \\
+    \bottomrule
+  \end{tblr}
+
+  \vspace{1em}
+
+  \textbf{Usage in slides:}
+
+  \small
+  \texttt{\textbackslash oralnote\{Your speaking script here...\}}
+
+  \texttt{\textbackslash scratchnote\{TODO: Update this slide\}}
+
+\end{frame}
+
+\oralnote{
+  This note system is really powerful for presentation development. During preparation, use scratch notes for TODOs and reminders. When practicing or presenting, switch to oral notes to see your speaking script.
+}
+
+\scratchnote{
+  Consider adding an example showing notes displayed on a second screen during presentation.
+}
 
 \begin{frame}{Using the \texttt{\textbackslash rplotfile} Macro}
-	\framesubtitle{Automatic plot generation from R scripts}
-	
-	\textbf{How it works:}
-	
-	\begin{enumerate}
-		\item Create an R script in \texttt{rplot/}
-		\item Script saves plot as PDF
-		\item Use \texttt{\textbackslash rplotfile} to include it
-		\item Plot auto-regenerates when script changes
-	\end{enumerate}
-	
-	\vspace{1em}
-	
-	\begin{columns}[T]
-		\column{0.50\textwidth}
-		
-		\textbf{Example usage:}
-		
-		\small
-		\texttt{\textbackslash rplotfile[width=0.7\textbackslash textwidth]}
-		
-		\texttt{\phantom{xx}\{example-plot\}}
-		
-		\texttt{\phantom{xx}\{rplot/example-plot.R\}}
-		
-		\column{0.46\textwidth}
-		
-		% Demo: Include the example R plot
-		\begin{center}
-			\rplotfile[width=\textwidth]{example-plot}{rplot/example-plot.R}
-		\end{center}
-		
-	\end{columns}
-	
-	\vspace{0.5em}
-	\small
-	This plot was generated by \texttt{rplot/example-plot.R}
-	
+  \framesubtitle{Automatic plot generation from R scripts}
+
+  \textbf{How it works:}
+
+  \begin{enumerate}
+    \item Create an R script in \texttt{rplot/}
+    \item Script saves plot as PDF
+    \item Use \texttt{\textbackslash rplotfile} to include it
+    \item Plot auto-regenerates when script changes
+  \end{enumerate}
+
+  \vspace{1em}
+
+  \begin{columns}[T]
+    \column{0.50\textwidth}
+
+    \textbf{Example usage:}
+
+    \small
+    \texttt{\textbackslash rplotfile[width=0.7\textbackslash textwidth]}
+
+    \texttt{\phantom{xx}\{example-plot\}}
+
+    \texttt{\phantom{xx}\{rplot/example-plot.R\}}
+
+    \column{0.46\textwidth}
+
+    % Demo: Include the example R plot
+    \begin{center}
+      \rplotfile[width=\textwidth]{example-plot}{rplot/example-plot.R}
+    \end{center}
+
+  \end{columns}
+
+  \vspace{0.5em}
+  \small
+  This plot was generated by \texttt{rplot/example-plot.R}
+
 \end{frame}
 
+\oralnote{
+  The rplotfile macro is great for reproducibility. Your plots are automatically regenerated when you update the R script, so your presentation always shows the latest results.
+}
+
 \begin{frame}{Math and Tables Support}
-	\framesubtitle{Pre-configured packages for scientific presentations}
-	
-	\begin{columns}[T]
-		\column{0.48\textwidth}
-		
-		\textbf{Math with amsmath:}
-		
-		Inline math: $E = mc^2$
-		
-		\vspace{0.5em}
-		
-		Display math:
-		\[
-		\int_{-\infty}^{\infty} e^{-x^2} dx = \sqrt{\pi}
-		\]
-		
-		Aligned equations:
-		\begin{align}
-		f(x) &= x^2 + 2x + 1 \\
-		     &= (x + 1)^2
-		\end{align}
-		
-		\column{0.48\textwidth}
-		
-		\textbf{Tables with tabularray:}
-		
-		\begin{tblr}{
-			colspec = {l r r},
-			row{1} = {font=\bfseries},
-		}
-			\toprule
-			Item & Value & Unit \\
-			\midrule
-			Parameter A & 42 & m/s \\
-			Parameter B & 3.14 & rad \\
-			Parameter C & 2.71 & -- \\
-			\bottomrule
-		\end{tblr}
-		
-	\end{columns}
+  \framesubtitle{Pre-configured packages for scientific presentations}
+
+  \begin{columns}[T]
+    \column{0.48\textwidth}
+
+    \textbf{Math with amsmath:}
+
+    Inline math: $E = mc^2$
+
+    \vspace{0.5em}
+
+    Display math:
+    \[
+      \int_{-\infty}^{\infty} e^{-x^2} dx = \sqrt{\pi}
+    \]
+
+    Aligned equations:
+    \begin{align}
+      f(x) & = x^2 + 2x + 1 \\
+           & = (x + 1)^2
+    \end{align}
+
+    \column{0.48\textwidth}
+
+    \textbf{Tables with tabularray:}
+
+    \begin{tblr}{
+        colspec = {l r r},
+        row{1} = {font=\bfseries},
+      }
+      \toprule
+      Item        & Value & Unit \\
+      \midrule
+      Parameter A & 42    & m/s  \\
+      Parameter B & 3.14  & rad  \\
+      Parameter C & 2.71  & --   \\
+      \bottomrule
+    \end{tblr}
+
+  \end{columns}
 \end{frame}
 
 \begin{frame}{Next Steps}
-	\framesubtitle{Customize this template for your needs}
-	
-	\textbf{To use this template:}
-	
-	\begin{enumerate}
-		\item Replace the example content with your own slides
-		\item Add your R plotting scripts to \texttt{rplot/}
-		\item Customize colors, fonts, and theme settings as needed
-		\item Build with \texttt{nix build} or develop with \texttt{nix develop}
-	\end{enumerate}
-	
-	\vspace{1em}
-	
-	\textbf{Useful resources:}
-	\begin{itemize}
-		\item Gotham theme documentation: \texttt{texdoc beamertheme-gotham}
-		\item Beamer user guide: \texttt{texdoc beamer}
-		\item Tabularray manual: \texttt{texdoc tabularray}
-	\end{itemize}
-	
-	\vspace{1em}
-	
-	\begin{center}
-		\Large
-		\textbf{Happy presenting!}
-	\end{center}
+  \framesubtitle{Customize this template for your needs}
+
+  \textbf{To use this template:}
+
+  \begin{enumerate}
+    \item Replace the example content with your own slides
+    \item Add your R plotting scripts to \texttt{rplot/}
+    \item Customize colors, fonts, and theme settings as needed
+    \item Build with \texttt{nix build} or develop with \texttt{nix develop}
+  \end{enumerate}
+
+  \vspace{1em}
+
+  \textbf{Useful resources:}
+  \begin{itemize}
+    \item Gotham theme documentation: \texttt{texdoc beamertheme-gotham}
+    \item Beamer user guide: \texttt{texdoc beamer}
+    \item Tabularray manual: \texttt{texdoc tabularray}
+  \end{itemize}
+
+  \vspace{1em}
+
+  \begin{center}
+    \Large
+    \textbf{Happy presenting!}
+  \end{center}
 \end{frame}
 
 \end{document}
